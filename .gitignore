@@ -1,0 +1,19 @@
+# Ignore node_modules
+node_modules/
+
+# Ignore environment config
+.env
+
+# Logs
+logs
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+coverage/
+
+# Build folders
+dist/
