@@ -3,6 +3,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 
 const sweetRoutes = require("./routes/sweetRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 
 const app = express();
 
@@ -14,11 +15,6 @@ app.use(morgan("dev"));
 
 // Routes
 app.use("/api/sweets", sweetRoutes);
-
-// Error Handler (Optional)
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: "Something went wrong!" });
-});
+app.use("/api/categories", categoryRoutes);
 
 module.exports = app;

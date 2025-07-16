@@ -15,13 +15,7 @@ const sweetSchema = new mongoose.Schema(
     category: {
       type: String,
       required: [true, "Category is required"],
-      enum: [
-        "Nut-Based",
-        "Vegetable-Based",
-        "Milk-Based",
-        "Traditional",
-        "Modern",
-      ],
+      trim: true,
     },
     price: {
       type: Number,
@@ -46,6 +40,9 @@ const sweetSchema = new mongoose.Schema(
       },
     ],
     loyaltyPoints: { type: Number, default: 0 },
+    imagePath: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
