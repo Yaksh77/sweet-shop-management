@@ -3,7 +3,7 @@ const Sweet = require("../models/Sweet");
 // ➕ Add a new sweet
 exports.addSweet = async (req, res) => {
   try {
-    const { id, name, category, price, quantity } = req.body;
+    const { id, name, category, price, quantity, greenScore } = req.body;
 
     // Check for duplicate ID
     const exists = await Sweet.findOne({ id });
@@ -11,7 +11,14 @@ exports.addSweet = async (req, res) => {
       return res.status(400).json({ message: "Sweet ID already exists" });
     }
 
-    const sweet = await Sweet.create({ id, name, category, price, quantity });
+    const sweet = await Sweet.create({
+      id,
+      name,
+      category,
+      price,
+      quantity,
+      greenScore,
+    });
     res.status(201).json({ message: "Sweet added successfully", data: sweet });
   } catch (error) {
     res
@@ -156,5 +163,17 @@ exports.restockSweet = async (req, res) => {
     res
       .status(500)
       .json({ message: "Error restocking sweet", error: error.message });
+  }
+};
+
+exports.addReview = async (req, res) => {
+  try {
+    const sweet = await Sweet.findOne({ id: req.params.id });
+    sweet.reviews.push(req.body);
+    sweet.loyaltyPoints += 10; // 🎁 Add points per review
+    await sweet.save();
+    res.status(200).json({ message: "Review added", data: sweet });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to add review", error });
   }
 };
