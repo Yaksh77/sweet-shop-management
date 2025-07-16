@@ -149,3 +149,30 @@ describe("PATCH /api/sweets/:id/purchase", () => {
     expect(res.body.message).toMatch(/insufficient stock/i); // ✅ Must match your controller
   });
 });
+
+describe("PATCH /api/sweets/:id/restock", () => {
+  it("should increase quantity by specified amount", async () => {
+    const sweet = await Sweet.create({
+      id: 2003,
+      name: "Ladoo",
+      category: "Traditional",
+      price: 10,
+      quantity: 5,
+    });
+
+    const res = await request(app)
+      .patch(`/api/sweets/${sweet.id}/restock`)
+      .send({ quantity: 10 });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data.quantity).toBe(15);
+  });
+
+  it("should return 404 if sweet not found", async () => {
+    const res = await request(app)
+      .patch("/api/sweets/88888/restock")
+      .send({ quantity: 10 });
+
+    expect(res.statusCode).toBe(404);
+  });
+});
