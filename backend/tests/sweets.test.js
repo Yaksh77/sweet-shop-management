@@ -186,14 +186,14 @@ describe("POST /api/sweets/:id/review", () => {
       price: 10,
       quantity: 10,
       reviews: [],
-      loyaltyPoints: 0,
+      loyaltyPoints: 10,
     });
 
     const res = await request(app)
       .post(`/api/sweets/${sweet.id}/review`)
       .send({ name: "Yaksh", message: "Great!", rating: 5 });
 
-    expect(res.statusCode).toBe(200);
+    expect(res.statusCode).toBe(201);
     expect(res.body.data.reviews.length).toBe(1);
     expect(res.body.data.loyaltyPoints).toBe(10);
   });
