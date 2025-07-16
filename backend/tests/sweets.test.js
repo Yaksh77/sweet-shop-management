@@ -59,3 +59,21 @@ describe("GET /api/sweets", () => {
     expect(res.body.data[0]).toHaveProperty("name");
   });
 });
+
+describe("DELETE /api/sweets/:id", () => {
+  it("should delete a sweet by ID", async () => {
+    const sweet = await Sweet.create({
+      id: 1005,
+      name: "Jalebi",
+      category: "Traditional",
+      price: 20,
+      quantity: 50,
+    });
+
+    const res = await request(app).delete(`/api/sweets/${sweet.id}`);
+    expect(res.statusCode).toBe(200);
+
+    const exists = await Sweet.findOne({ id: 1005 });
+    expect(exists).toBeNull();
+  });
+});
