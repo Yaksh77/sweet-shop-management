@@ -1,6 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { addSweet, getAllSweets } = require("../controllers/sweetController");
+const {
+  addSweet,
+  getAllSweets,
+  getSweetById,
+  deleteSweet,
+} = require("../controllers/sweetController");
 
 // ➕ Add Sweet
 router.post("/", addSweet);
@@ -10,5 +15,8 @@ router.get("/", getAllSweets);
 
 // 🔍 Get one sweet by ID
 router.get("/:id", getSweetById);
+
+// ❌ Delete a sweet
+router.delete("/:id", deleteSweet);
 
 module.exports = router;
