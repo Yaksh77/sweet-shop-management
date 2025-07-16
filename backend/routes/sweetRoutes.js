@@ -8,4 +8,7 @@ router.post("/", addSweet);
 // 📃 Get all Sweets (with search/sort/filter)
 router.get("/", getAllSweets);
 
+// 🔍 Get one sweet by ID
+router.get("/:id", getSweetById);
+
 module.exports = router;

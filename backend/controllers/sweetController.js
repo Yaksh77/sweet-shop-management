@@ -52,3 +52,20 @@ exports.getAllSweets = async (req, res) => {
       .json({ message: "Failed to fetch sweets", error: error.message });
   }
 };
+
+// 🔍 Get one sweet by ID
+exports.getSweetById = async (req, res) => {
+  try {
+    const sweet = await Sweet.findOne({ id: req.params.id });
+
+    if (!sweet) {
+      return res.status(404).json({ message: "Sweet not found" });
+    }
+
+    res.status(200).json({ data: sweet });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching sweet", error: error.message });
+  }
+};
