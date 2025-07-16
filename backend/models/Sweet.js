@@ -33,6 +33,19 @@ const sweetSchema = new mongoose.Schema(
       required: [true, "Quantity is required"],
       min: [0, "Quantity must be >= 0"],
     },
+    greenScore: {
+      type: Boolean,
+      default: false,
+    },
+    reviews: [
+      {
+        name: String,
+        message: String,
+        rating: Number,
+        date: { type: Date, default: Date.now },
+      },
+    ],
+    loyaltyPoints: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
