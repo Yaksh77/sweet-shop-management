@@ -7,6 +7,7 @@ const {
   deleteSweet,
   updateSweet,
   purchaseSweet,
+  restockSweet,
 } = require("../controllers/sweetController");
 
 // ➕ Add Sweet
@@ -26,5 +27,8 @@ router.put("/:id", updateSweet);
 
 // 🛒 Purchase sweet (reduce quantity)
 router.patch("/:id/purchase", purchaseSweet);
+
+// 📦 Restock sweet (increase quantity)
+router.patch("/:id/restock", restockSweet);
 
 module.exports = router;
