@@ -33,3 +33,29 @@ describe("POST /api/sweets", () => {
     expect(res.body.data.name).toBe("Rasgulla");
   });
 });
+
+describe("GET /api/sweets", () => {
+  it("should fetch all sweets", async () => {
+    await Sweet.create([
+      {
+        id: 1001,
+        name: "Kaju Katli",
+        category: "Nut-Based",
+        price: 50,
+        quantity: 20,
+      },
+      {
+        id: 1002,
+        name: "Gajar Halwa",
+        category: "Vegetable-Based",
+        price: 30,
+        quantity: 15,
+      },
+    ]);
+
+    const res = await request(app).get("/api/sweets");
+    expect(res.statusCode).toBe(200);
+    expect(res.body.count).toBe(2);
+    expect(res.body.data[0]).toHaveProperty("name");
+  });
+});
