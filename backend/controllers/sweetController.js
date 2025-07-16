@@ -179,6 +179,7 @@ exports.addReview = async (req, res) => {
   }
 
   sweet.reviews.push({ name, message, rating });
+  sweet.loyaltyPoints += 10;
   await sweet.save();
 
   res.status(201).json({ message: "Review added", data: sweet });
