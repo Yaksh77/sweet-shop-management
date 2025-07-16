@@ -5,6 +5,7 @@ const {
   getAllSweets,
   getSweetById,
   deleteSweet,
+  updateSweet,
 } = require("../controllers/sweetController");
 
 // ➕ Add Sweet
@@ -18,5 +19,8 @@ router.get("/:id", getSweetById);
 
 // ❌ Delete a sweet
 router.delete("/:id", deleteSweet);
+
+// ✏️ Update sweet details
+router.put("/:id", updateSweet);
 
 module.exports = router;

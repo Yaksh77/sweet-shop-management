@@ -86,3 +86,19 @@ exports.deleteSweet = async (req, res) => {
       .json({ message: "Error deleting sweet", error: error.message });
   }
 };
+
+// ✏️ Update a sweet (optional full update)
+exports.updateSweet = async (req, res) => {
+  try {
+    const sweet = await Sweet.findOneAndUpdate(
+      { id: req.params.id },
+      req.body,
+      { new: true, runValidators: true }
+    );
+    if (!sweet)
+      return res.status(404).json({ message: "Sweet not found to update" });
+    res.status(200).json({ message: "Sweet updated", data: sweet });
+  } catch (err) {
+    res.status(500).json({ message: "Update failed", error: err.message });
+  }
+};
