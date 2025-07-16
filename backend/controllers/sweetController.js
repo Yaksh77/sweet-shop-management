@@ -167,13 +167,19 @@ exports.restockSweet = async (req, res) => {
 };
 
 exports.addReview = async (req, res) => {
-  try {
-    const sweet = await Sweet.findOne({ id: req.params.id });
-    sweet.reviews.push(req.body);
-    sweet.loyaltyPoints += 10; // 🎁 Add points per review
-    await sweet.save();
-    res.status(200).json({ message: "Review added", data: sweet });
-  } catch (error) {
-    res.status(500).json({ message: "Failed to add review", error });
+  const { name, message, rating } = req.body;
+
+  if (!name || !message || !rating) {
+    return res.status(400).json({ message: "All fields are required" });
   }
+
+  const sweet = await Sweet.findOne({ id: req.params.id });
+  if (!sweet) {
+    return res.status(404).json({ message: "Sweet not found" });
+  }
+
+  sweet.reviews.push({ name, message, rating });
+  await sweet.save();
+
+  res.status(201).json({ message: "Review added", data: sweet });
 };
