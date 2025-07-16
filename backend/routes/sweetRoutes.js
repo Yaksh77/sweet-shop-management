@@ -6,6 +6,7 @@ const {
   getSweetById,
   deleteSweet,
   updateSweet,
+  purchaseSweet,
 } = require("../controllers/sweetController");
 
 // ➕ Add Sweet
@@ -22,5 +23,8 @@ router.delete("/:id", deleteSweet);
 
 // ✏️ Update sweet details
 router.put("/:id", updateSweet);
+
+// 🛒 Purchase sweet (reduce quantity)
+router.patch("/:id/purchase", purchaseSweet);
 
 module.exports = router;

@@ -102,3 +102,33 @@ exports.updateSweet = async (req, res) => {
     res.status(500).json({ message: "Update failed", error: err.message });
   }
 };
+
+// 🛒 Purchase sweet (decrease quantity)
+exports.purchaseSweet = async (req, res) => {
+  try {
+    const sweet = await Sweet.findOne({ id: req.params.id });
+
+    if (!sweet) {
+      return res.status(404).json({ message: "Sweet not found" });
+    }
+
+    const { quantity } = req.body;
+
+    if (quantity <= 0) {
+      return res.status(400).json({ message: "Quantity must be positive" });
+    }
+
+    if (sweet.quantity < quantity) {
+      return res.status(400).json({ message: "Insufficient stock" });
+    }
+
+    sweet.quantity -= quantity;
+    await sweet.save();
+
+    res.status(200).json({ message: "Sweet purchased", data: sweet });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error purchasing sweet", error: error.message });
+  }
+};
