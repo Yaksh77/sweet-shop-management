@@ -184,3 +184,27 @@ exports.addReview = async (req, res) => {
 
   res.status(201).json({ message: "Review added", data: sweet });
 };
+
+exports.addImage = async (req, res) => {
+  try {
+    const sweet = await Sweet.findOne({ id: req.params.id });
+
+    if (!sweet) {
+      return res.status(404).json({ message: "Sweet not found" });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    sweet.imagePath = req.file.path;
+    await sweet.save();
+
+    res.status(200).json({ message: "Image uploaded", path: req.file.path });
+  } catch (error) {
+    console.error("Upload error:", error.message);
+    res
+      .status(500)
+      .json({ message: "Something went wrong!", error: error.message });
+  }
+};

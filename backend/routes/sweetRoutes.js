@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const upload = require("../middleware/upload");
 const {
   addSweet,
   getAllSweets,
@@ -9,6 +10,7 @@ const {
   purchaseSweet,
   restockSweet,
   addReview,
+  addImage,
 } = require("../controllers/sweetController");
 
 // ➕ Add Sweet
@@ -34,5 +36,8 @@ router.patch("/:id/restock", restockSweet);
 
 // 💬 Add a review to a sweet
 router.post("/:id/review", addReview);
+
+// 🖼️ Add an image to a sweet
+router.post("/:id/image", upload.single("image"), addImage);
 
 module.exports = router;
