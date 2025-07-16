@@ -176,3 +176,25 @@ describe("PATCH /api/sweets/:id/restock", () => {
     expect(res.statusCode).toBe(404);
   });
 });
+
+describe("POST /api/sweets/:id/review", () => {
+  it("should add a review and increase loyalty points", async () => {
+    const sweet = await Sweet.create({
+      id: 999,
+      name: "Chocolate Bar",
+      category: "Modern",
+      price: 10,
+      quantity: 10,
+      reviews: [],
+      loyaltyPoints: 0,
+    });
+
+    const res = await request(app)
+      .post(`/api/sweets/${sweet.id}/review`)
+      .send({ name: "Yaksh", message: "Great!", rating: 5 });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data.reviews.length).toBe(1);
+    expect(res.body.data.loyaltyPoints).toBe(10);
+  });
+});
