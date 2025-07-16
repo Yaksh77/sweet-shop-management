@@ -19,3 +19,36 @@ exports.addSweet = async (req, res) => {
       .json({ message: "Failed to add sweet", error: error.message });
   }
 };
+
+// 📃 Get all sweets (with optional filter/sort)
+exports.getAllSweets = async (req, res) => {
+  try {
+    const { category, minPrice, maxPrice, sort } = req.query;
+
+    const query = {};
+
+    // Filtering
+    if (category) query.category = category;
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = parseFloat(minPrice);
+      if (maxPrice) query.price.$lte = parseFloat(maxPrice);
+    }
+
+    let sweets = Sweet.find(query);
+
+    // Sorting
+    if (sort) {
+      const sortField = sort.replace("_asc", "").replace("_desc", "");
+      const sortOrder = sort.endsWith("_desc") ? -1 : 1;
+      sweets = sweets.sort({ [sortField]: sortOrder });
+    }
+
+    const results = await sweets;
+    res.status(200).json({ count: results.length, data: results });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to fetch sweets", error: error.message });
+  }
+};
