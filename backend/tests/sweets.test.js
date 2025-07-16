@@ -113,3 +113,39 @@ describe("PUT /api/sweets/:id", () => {
     expect(res.body.message).toBe("Sweet not found to update"); // ✅ or match your exact error
   });
 });
+
+describe("PATCH /api/sweets/:id/purchase", () => {
+  it("should not allow purchase if insufficient quantity", async () => {
+    const sweet = await Sweet.create({
+      id: 2002,
+      name: "Jalebi",
+      category: "Traditional",
+      price: 25,
+      quantity: 2,
+    });
+
+    const res = await request(app)
+      .patch(`/api/sweets/${sweet.id}/purchase`)
+      .send({ quantity: 5 });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.message).toMatch(/insufficient stock/i); // ✅ Must match your controller
+  });
+
+  it("should not allow purchase if insufficient quantity", async () => {
+    const sweet = await Sweet.create({
+      id: 2002,
+      name: "Jalebi",
+      category: "Traditional",
+      price: 25,
+      quantity: 2,
+    });
+
+    const res = await request(app)
+      .patch(`/api/sweets/${sweet.id}/purchase`)
+      .send({ quantity: 5 });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.message).toMatch(/insufficient stock/i); // ✅ Must match your controller
+  });
+});
