@@ -77,3 +77,39 @@ describe("DELETE /api/sweets/:id", () => {
     expect(exists).toBeNull();
   });
 });
+
+describe("PUT /api/sweets/:id", () => {
+  it("should update an existing sweet", async () => {
+    const sweet = await Sweet.create({
+      id: 1004,
+      name: "Jalebi",
+      category: "Traditional",
+      price: 20,
+      quantity: 50,
+    });
+
+    const updatedData = {
+      name: "Jalebi Deluxe",
+      price: 75,
+      quantity: 30,
+    };
+
+    const res = await request(app)
+      .put(`/api/sweets/${sweet.id}`)
+      .send(updatedData);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data.name).toBe("Jalebi Deluxe");
+    expect(res.body.data.price).toBe(75);
+    expect(res.body.data.quantity).toBe(30);
+  });
+
+  it("should return 404 for non-existent sweet", async () => {
+    const res = await request(app)
+      .put("/api/sweets/99999")
+      .send({ name: "Fake Sweet", price: 10 });
+
+    expect(res.statusCode).toBe(404);
+    expect(res.body.message).toBe("Sweet not found to update"); // ✅ or match your exact error
+  });
+});
