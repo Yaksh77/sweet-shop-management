@@ -1,100 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
+import SweetModal from "./SweetModal";
 
 export default function SweetForm({ onAdd }) {
-  const [categories, setCategories] = useState([]);
-
-  const [form, setForm] = useState({
-    id: "",
-    name: "",
-    category: "",
-    price: "",
-    quantity: "",
-    greenScore: false,
-  });
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await axios.post("http://localhost:5000/api/sweets", form);
-    onAdd();
-    setForm({
-      id: "",
-      name: "",
-      category: "",
-      price: "",
-      quantity: "",
-      greenScore: false,
-    });
-  };
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/categories")
-      .then((res) => setCategories(res.data.categories))
-      .catch((err) => console.error("Category load failed:", err));
-  }, []);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [addSweet, setAddSweet] = useState(null);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>➕ Add New Sweet</h2>
-      <input
-        name="id"
-        value={form.id}
-        onChange={handleChange}
-        placeholder="ID"
-        required
-      />
-      <input
-        name="name"
-        value={form.name}
-        onChange={handleChange}
-        placeholder="Name"
-        required
-      />
-      <select
-        className="p-2 rounded bg-zinc-800 text-white"
-        value={form.category}
-        onChange={(e) => setForm({ ...form, category: e.target.value })}
+    <>
+      <button
+        onClick={() => {
+          setAddSweet(null); // used to indicate this is an ADD, not an edit
+          setIsModalOpen(true);
+        }}
       >
-        <option value="">Select Category</option>
-        {categories.map((cat) => (
-          <option key={cat} value={cat}>
-            {cat}
-          </option>
-        ))}
-      </select>
-      <input
-        name="price"
-        type="number"
-        value={form.price}
-        onChange={handleChange}
-        placeholder="Price"
+        ➕ Add Sweet
+      </button>
+
+      <SweetModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        sweet={addSweet}
+        onSubmit={async (formData) => {
+          // Always call this for new sweet
+          await axios.post("http://localhost:5000/api/sweets", formData);
+          onAdd();
+        }}
       />
-      <input
-        name="quantity"
-        type="number"
-        value={form.quantity}
-        onChange={handleChange}
-        placeholder="Qty"
-      />
-      <label>
-        <input
-          type="checkbox"
-          name="greenScore"
-          checked={form.greenScore}
-          onChange={handleChange}
-        />{" "}
-        🌿 Eco-Friendly
-      </label>
-      <button type="submit">Add Sweet</button>
-    </form>
+    </>
   );
 }
